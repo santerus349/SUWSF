@@ -74,9 +74,9 @@ std::vector<GenericPatch::Config> GenericPatch::GetConfigs()
 			{
 				DBOUT("ValueType=" << params.second);
 				config.valType = params.second;
-				if (config.valType != "float" && config.valType != "byte" && config.valType != "int" && config.valType != "double")
+				if (config.valType != "float" && config.valType != "byte" && config.valType != "int" && config.valType != "double" && config.valType != "short")
 				{
-					DBOUT("ValueType unsupported. Supported types are: float, byte...Skipping patch...");
+					DBOUT("ValueType unsupported. Supported types are: float, byte, short...Skipping patch...");
 					goto CONTINUE;
 				}
 			}
@@ -105,7 +105,7 @@ std::vector<GenericPatch::Config> GenericPatch::GetConfigs()
 			DBOUT("No pattern found, skipping patch...");
 			goto CONTINUE;
 		}
-		if (config.valType == "float" || config.valType == "int" || config.valType == "double")
+		if (config.valType == "float" || config.valType == "int" || config.valType == "double" || config.valType == "short")
 		{
 			try
 			{
@@ -134,6 +134,11 @@ std::vector<GenericPatch::Config> GenericPatch::GetConfigs()
 				else if (config.valType == "double")
 				{
 					config.val = hexStr(reinterpret_cast<BYTE*>(&d), sizeof(double));
+				}
+				else if (config.valType == "short")
+				{
+					short s = static_cast<short>(d);
+					config.val = hexStr(reinterpret_cast<BYTE*>(&s), sizeof(short));
 				}
 			}
 			catch (std::exception const& e)
